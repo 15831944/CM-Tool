@@ -46,5 +46,6 @@ typedef struct
 
 
 extern void souceData_To_protcldata(); //提供将数据打包的接口
+devSetings *get_devsetings();
 
 #endif // DATASENT_H

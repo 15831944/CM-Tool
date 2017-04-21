@@ -27,14 +27,47 @@ typedef struct circuitParameters
     quint16 *voltagefrequency; //电压频率
 }electricData;
 
+typedef struct environmentdatas
+{
+    int len;
+    unit tem;
+    unit hum;
+    quint8 *door;
+    quint8 *water;
+    quint8 *smoke;
+}environmentdata;
+
+typedef struct deviceType
+{
+    char  *devName;
+    char  *devMode;   //工作模式
+    char  *devModel; //设备型号
+}devType;
+
+typedef struct deviceAddr
+{
+    char  *dataCenter;
+    char  *module;
+    char  *cabinet;
+}devAddr;
+
+typedef struct deviceInformation
+{
+    devType mDevType;
+    devAddr mDevAddr;
+}devInfo;
+
+
 
 typedef struct loopOutPhrase
 {
     electricData loopData;
-
     electricData inputPhrase;
     electricData outData;
 
+    environmentdata envData;
+
+    devInfo mDevInfo;  //设备信息
 }parameterData;
 
 

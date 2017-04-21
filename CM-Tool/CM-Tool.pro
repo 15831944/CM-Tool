@@ -18,13 +18,25 @@ SOURCES += main.cpp\
     udp/heartbeat.cpp \
     udp/datasouce.cpp \
     udp/datasent.cpp \
-    udp/myudpthread.cpp
+    udp/myudpthread.cpp \
+    tcp/tcpsocket.cpp \
+    tcp/tcpserver.cpp \
+    tcp/tcpthread.cpp \
+    tcp/analysisdata.cpp \
+    thresholdsetting/settingdialog.cpp
+
 
 HEADERS  += mainwindow.h \
     udp/heartbeat.h \
     udp/datadefine.h \
     udp/datasouce.h \
     udp/datasent.h \
-    udp/myudpthread.h
+    udp/myudpthread.h \
+    tcp/tcpsocket.h \
+    tcp/tcpserver.h \
+    tcp/tcpthread.h \
+    tcp/analysisdata.h \
+    thresholdsetting/settingdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    thresholdsetting/settingdialog.ui
