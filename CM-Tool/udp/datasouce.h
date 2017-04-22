@@ -4,19 +4,36 @@
 #define Random(x) (rand() % x) //获取0到x之间的随机数
 
 #include "datadefine.h"
+//#include "mainwindow.h"
 #include <QDebug>
 
+typedef struct deviceSettings
+{
+    uchar devType; //1 -ip  2 -rp  3 -mp
+    QString devName;
+    uchar viceNumber;
+    int devLoopNum;
+    int devPhaseNum;
+    int devOutNum;
+    int devSensorNum;
+    quint8 entranceGuard1;
+    quint8 entranceGuard2;
+    quint8 smoke;
+    quint8 water;
 
-//template<typename T> void swap(T& t1, T& t2);
+
+}devSetings;
+
 
 class DataSouce
 {
 public:
     DataSouce();
+    ~DataSouce();
 
 
 public:
-    parameterData *souceData;
+
 
     void updateSouceData();
 
@@ -33,9 +50,25 @@ public:
     parameterData *getSouceData();
     void allocateSpace();
 
+    //提供修改原始数据的接口
+    void setData(unit *mUnit, int num, quint8 *data);
+    //    void setData(unit *mUnit, int num, quint16 *data);
+
+    void renewalSouceData(); //更新数据
+    void renewalUnit(unit &mUnit);
+
+    void changeDevSettings();
+
+private:
+    parameterData *souceData;
+
+
 
 
 
 };
+
+extern DataSouce *get_datasouce();
+extern devSetings *get_devsetings();
 
 #endif // DATASOUCE_H

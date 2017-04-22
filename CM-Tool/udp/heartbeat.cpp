@@ -10,13 +10,18 @@ static HeartBeat *heartbeat =NULL;
 HeartBeat *get_HeartBeat()
 {
     if(!heartbeat)
+    {
         heartbeat = new HeartBeat(NULL,18725);
+        //        qDebug()<<"get_HeartBeat";
+    }
     return  heartbeat;
 }
 
 
 
-HeartBeat::HeartBeat(QWidget *parent, int port) : QWidget(parent)
+
+
+HeartBeat::HeartBeat(QWidget *parent, int port) : QObject(parent)
 {
     mUdpScoket = new QUdpSocket(this);
     mAddr = new QHostAddress;
@@ -26,7 +31,8 @@ HeartBeat::HeartBeat(QWidget *parent, int port) : QWidget(parent)
     bool ret = mUdpScoket->bind(port); //只能绑定18725才能收到心跳包
     if(!ret)
     {
-        QMessageBox::warning(this,tr("警告"),tr("绑定端口失败"),tr("确定"));
+        //        QMessageBox::warning(this,tr("警告"),tr("绑定端口失败"),tr("确定"));
+        qDebug()<<"绑定端口失败！";
     }
     connect(mUdpScoket,SIGNAL(readyRead()),this,SLOT(dataReceived()));
 }
@@ -46,10 +52,6 @@ void HeartBeat::dataReceived()
         quint64 number  = mUdpScoket->readDatagram(array.data(),array.size(),mAddr,mPort); //maddr和port存储接收到的心跳包心跳包IP
 
         data = array.data();
-
-
-        //        qDebug()<<"IP:"<<(*mAddr).toString()<<"PORT:"<<QString::number((*mPort),10);
-
     }
 }
 
@@ -84,6 +86,15 @@ QString HeartBeat::getData()
     return data;
 }
 
+bool HeartBeat::clearData()
+{
+    data.clear();
+    if(data.isEmpty())
+        return true;
+    else
+        return false;
+}
+
 
 /**
  * @brief 传入QByteArray，将数据发送出去
@@ -91,7 +102,9 @@ QString HeartBeat::getData()
 void HeartBeat::sendData(QByteArray &array)
 {
 
-    QHostAddress addr = *maddr; //心跳包地址
+    QHostAddress addr = *mAddr; //心跳包地址
+    //        qDebug()<<"*mAddr:"<<*mAddr;
+    //    QHostAddress addr("192.168.1.112");
 
     mUdpScoket->writeDatagram(array,addr,28720); //向接收到心跳包的ip指定端口发送数据
 }

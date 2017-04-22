@@ -6,8 +6,10 @@
 #include<QHostAddress>
 #include<QMessageBox>
 #include<QDebug>
+#include <QMessageBox>
+//#include <QThread>
 
-class HeartBeat : public QWidget
+class HeartBeat : public QObject
 {
     Q_OBJECT
 public:
@@ -16,6 +18,7 @@ public:
     QHostAddress getAddr();
     quint16 getPort();
     QString getData();
+    bool clearData();
     void sendData(QByteArray &array);
 
 signals:
