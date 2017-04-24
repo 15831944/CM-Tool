@@ -11,6 +11,7 @@
 #include <QCheckBox>
 #include "udp/myudpthread.h"
 #include "tcp/tcpthread.h"
+#include "udp/globalreceivethread.h"
 #include <ctype.h>
 #include <QRadioButton>
 #include <QButtonGroup>

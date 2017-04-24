@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     tcp/tcpserver.cpp \
     tcp/tcpthread.cpp \
     tcp/analysisdata.cpp \
-    thresholdsetting/settingdialog.cpp
+    thresholdsetting/settingdialog.cpp \
+    udp/globalreceivethread.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -36,7 +37,8 @@ HEADERS  += mainwindow.h \
     tcp/tcpserver.h \
     tcp/tcpthread.h \
     tcp/analysisdata.h \
-    thresholdsetting/settingdialog.h
+    thresholdsetting/settingdialog.h \
+    udp/globalreceivethread.h
 
 FORMS    += mainwindow.ui \
     thresholdsetting/settingdialog.ui

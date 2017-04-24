@@ -85,11 +85,13 @@ int get_data_packet(QByteArray array)
         souce->setData(&(soucedata->envData.tem),num,packet.segment.filed.data);
     else if(packet.segment.filed.fn[0] == 4 )
         souce->setData(&(soucedata->envData.hum),num,packet.segment.filed.data);
+    else if(packet.segment.filed.fn[0] == 13)  //输出位开关
+    {
+        int num = packet.segment.filed.fn[1];
+        souce->setSwitchData(&(soucedata->outData),num,*(packet.segment.filed.data));
 
-
-
-
-
+    }else if(packet.segment.filed.fn[0] == 18)
+        souce->setAllSwitchData(&(soucedata->outData),*(packet.segment.filed.data));
 
 }
 

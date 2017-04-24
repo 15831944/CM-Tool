@@ -13,9 +13,9 @@ DataSouce *get_datasouce()
         souce = new DataSouce;
         //        qDebug()<<"get_HeartBeat";
     }
-//    qDebug() <<<<souce;
-    for(int i = 0 ; i < 6 ;i++)
-    qDebug() << "get_datasouce:" <<i<<*(souce->getSouceData()->loopData.switchStatus+i);
+    //    qDebug() <<<<souce;
+    //    for(int i = 0 ; i < 6 ;i++)
+    //        qDebug() << "get_datasouce:" <<i<<*(souce->getSouceData()->loopData.switchStatus+i);
     return  souce;
 }
 
@@ -41,13 +41,13 @@ void DataSouce::updateSouceData()
     //为回路、输出位、输入相初始化数据
     initElectricData(souceData->loopData);
     for(int i = 0 ; i < 6 ;i++)
-    qDebug() << "loop:" <<i<<*(souceData->loopData.switchStatus+i);
+        qDebug() << "loop:" <<i<<*(souceData->loopData.switchStatus+i);
 
     initElectricData(souceData->inputPhrase);
 
     initElectricData(souceData->outData);
-     for(int i = 0 ; i < 6 ;i++)
-    qDebug() << "out:" <<i<<*(souceData->outData.switchStatus+i);
+    for(int i = 0 ; i < 6 ;i++)
+        qDebug() << "out:" <<i<<*(souceData->outData.switchStatus+i);
 
     //为环境数据初始化数据
     initUnit(souceData->envData.tem);
@@ -68,8 +68,20 @@ void DataSouce::updateSouceData()
 
 
     //其他数据特别初始化
-//    initRandomBuf<quint8>(1,2,souceData->loopData.switchStatus);
+    //    initRandomBuf<quint8>(1,2,souceData->loopData.switchStatus);
+    initFixedBuf<quint16>(5,souceData->loopData.cur.minValue);
+    initFixedBuf<quint16>(25,souceData->loopData.cur.maxValue);
+    initFixedBuf<quint16>(5,souceData->inputPhrase.cur.minValue);
+    initFixedBuf<quint16>(25,souceData->inputPhrase.cur.maxValue);
+    initFixedBuf<quint16>(5,souceData->outData.cur.minValue);
+    initFixedBuf<quint16>(25,souceData->outData.cur.maxValue);
 
+    initFixedBuf<quint16>(2200,souceData->loopData.vol.minValue);
+    initFixedBuf<quint16>(2500,souceData->loopData.vol.maxValue);
+    initFixedBuf<quint16>(2200,souceData->inputPhrase.vol.minValue);
+    initFixedBuf<quint16>(2500,souceData->inputPhrase.vol.maxValue);
+    initFixedBuf<quint16>(2200,souceData->outData.vol.minValue);
+    initFixedBuf<quint16>(2500,souceData->outData.vol.maxValue);
 
 
 }
@@ -91,7 +103,7 @@ template <class T> void DataSouce::initRandomBuf(T baseNum , T socpe, T *buf)
     for(int i = 0 ; i < 32 ; i++)
     {
         //        buffer[i] = baseNum + Random(socpe);//获取一个在1到5（即1+4）之间的随机数
-//        *(buf+i) = baseNum + Random(socpe);//获取一个在1到5（即1+4）之间的随机数
+        //        *(buf+i) = baseNum + Random(socpe);//获取一个在1到5（即1+4）之间的随机数
 
         buf[i] = baseNum + Random(socpe);
         //        qDebug()<<"buf:"<<*(buf + i);
@@ -151,8 +163,8 @@ void DataSouce::initElectricData(electricData &data)
     initRandomBuf<quint32>(400,500,data.energy);
     initRandomBuf<quint16>(1,2,data.powerFactor);
     initRandomBuf<quint8>(1,2,data.switchStatus); //开关范围为0 - 1
-//    for(int i = 0 ; i < 6 ;i++)
-//    qDebug() << "initRandomBuf:" <<i<<*(data.sw+i);
+    //    for(int i = 0 ; i < 6 ;i++)
+    //    qDebug() << "initRandomBuf:" <<i<<*(data.sw+i);
 
     initRandomBuf<quint16>(500,500,data.cDrined);
     initRandomBuf<quint16>(10,20,data.voltagefrequency);
@@ -183,13 +195,13 @@ void DataSouce::initUnit(unit &data)
 {
     //    qDebug()<<"initUnit";
     //    qDebug()<<"data.currentValue:"<<data.currentValue;
-    initRandomBuf<quint16>(10,15,data.currentValue);
+    initRandomBuf<quint16>(0,500,data.currentValue);
 
     //    qDebug()<<"data.currentvalue:"<<*(data.currentValue);
 
 
-    initFixedBuf<quint16>(5,data.minValue);
-    initFixedBuf<quint16>(7,data.maxValue);
+    initFixedBuf<quint16>(0,data.minValue);
+    initFixedBuf<quint16>(1000,data.maxValue);
     initFixedBuf<quint8>(8,data.alarmValue);
     initFixedBuf<quint16>(26,data.cirMinValue);
     initFixedBuf<quint16>(28,data.cirMaxValue);
@@ -252,20 +264,60 @@ void DataSouce::setData(unit *mUnit, int num, quint8 *data )
     qDebug()<<"cirmax:"<<*(mUnit->cirMaxValue + num -1);
 }
 
+/**
+ * @brief 输出位或者回路的开关设置
+ * @param data
+ * @param num
+ * @param status
+ */
+void DataSouce::setSwitchData(electricData *data, int num, quint8 status)
+{
+    *(data->switchStatus + num - 1) = status+1;
+}
+
+/**
+ * @brief 输出位或者回路的统一设置
+ * @param data
+ * @param num
+ * @param status
+ */
+void DataSouce::setAllSwitchData(electricData *data, quint8 status)
+{
+    for(int i = 1 ; i < (data->len +1); i++)
+        setSwitchData(data,i,status);
+}
+
 
 void DataSouce::renewalSouceData()
 {
-    renewalUnit(souceData->inputPhrase.cur);
-    renewalUnit(souceData->inputPhrase.vol);
-    renewalUnit(souceData->loopData.cur);
-    renewalUnit(souceData->loopData.vol);
-    renewalUnit(souceData->outData.cur);
-    renewalUnit(souceData->outData.vol);
+    renewalUnit(&(souceData->inputPhrase.cur));
+    //    renewalUnit(&(souceData->inputPhrase.vol)); 输入相电压根据波动范围变化
+    renewalUnit(&(souceData->loopData.cur));
+    renewalUnit(&(souceData->loopData.vol));
+    renewalUnit(&(souceData->outData.cur));
+    renewalUnit(&(souceData->outData.vol));
+    renewalUnit(&(souceData->envData.tem));  //温度湿度
+    renewalUnit(&(souceData->envData.hum));
+    //输入相电压
+
+    devSetings *settings = get_devsetings();
+
+    for(int i = 0 ; i < 32 ; i++)
+    {
+        *(souceData->inputPhrase.vol.currentValue + i) = getRandomNumber(settings->volUpNum,settings->volDownNum);
+        sleep(1);
+
+    }
 }
 
-void DataSouce::renewalUnit(unit &mUnit)
+void DataSouce::renewalUnit(unit *mUnit)
 {
-    initRandomBuf<quint16>(10,15,mUnit.currentValue);
+    //    initRandomBuf<quint16>(10,15,mUnit->currentValue);
+    for(int i = 0 ; i < 32 ; i++)
+    {
+        *(mUnit->currentValue+i) = getRandomNumber(*(mUnit->maxValue + i),*(mUnit->minValue + i));
+        sleep(1);
+    }
 }
 
 /**
@@ -277,7 +329,10 @@ void DataSouce::changeDevSettings()
 
     souceData->inputPhrase.len = settings->devPhaseNum;
     souceData->envData.len = settings->devSensorNum;
-    souceData->loopData.cur.num = settings->devLoopNum; //
+
+    souceData->loopData.cur.num = settings->devLoopNum; // 发送时读取的数据
+    souceData->loopData.len = settings->devLoopNum;     //界面显示
+
     souceData->outData.len = settings->devOutNum;
 
     memcpy(souceData->mDevInfo.mDevType.devName,settings->devName.toLatin1().data(),20);
@@ -290,7 +345,25 @@ void DataSouce::changeDevSettings()
 
 }
 
+/**
+ * @brief 传入上限下限，获取一个随机变化值
+ * @param x
+ * @return
+ */
+quint16 DataSouce::getRandomNumber(quint16 upNum, quint16 downNum)
+{
+    qsrand(QTime(0,0,0).msecsTo(QTime::currentTime()));
+    int randomNum =downNum + qrand()%(upNum - downNum);
+    return randomNum;
 
+}
+
+void DataSouce::sleep(unsigned int msec)
+{
+    QTime dieTime = QTime::currentTime().addMSecs(msec);
+    while( QTime::currentTime() < dieTime )
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 
 

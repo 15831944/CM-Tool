@@ -125,6 +125,12 @@
        <height>25</height>
       </rect>
      </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+     <property name="value">
+      <number>220</number>
+     </property>
     </widget>
     <widget class="QLabel" name="label_8">
      <property name="geometry">
@@ -210,6 +216,12 @@
        <width>42</width>
        <height>25</height>
       </rect>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+     <property name="value">
+      <number>250</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_12">
@@ -529,7 +541,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>9</string>
+      <string>0</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
