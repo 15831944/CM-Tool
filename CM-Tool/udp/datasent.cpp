@@ -13,6 +13,7 @@ void devinfo_filled(data_packet *data ,devInfo *packet);
 void electricData_filled(data_packet *data ,electricData *packet);
 void unit_filled(data_packet *data , unit *packet, int length);
 void sent_msg_xor(data_packet *data);
+void set_vice_number(data_packet *data ,int id);
 void sent_msg_end(data_packet *data);
 void quint8_to_char(data_packet *data , quint8 *buffer , int length);
 void ushort_to_char(data_packet *data ,quint16 *buffer ,int length);
@@ -72,7 +73,7 @@ void souceData_To_protcldata()
     //    DataSouce *souce = new DataSouce;  //更新数据
 
     DataSouce *souce = get_datasouce();
-        qDebug()<<"souceData_To_protcldata";
+    //        qDebug()<<"souceData_To_protcldata";
     parameterData *data = souce->getSouceData();  //获取数据
     //    qDebug() <<"data:" <<data->mDevInfo.mDevType.devName;
 
@@ -263,7 +264,7 @@ void unit_filled(data_packet *data , unit *packet, int length)
     sent_msg_xor(data);
 
     data->segment.filed.fn[1] = fn + fc++;
-//    data->segment.filed.data = packet->alarmValue;    //报警值
+    //    data->segment.filed.data = packet->alarmValue;    //报警值
     quint8_to_char(data,packet->alarmValue,length);
     sent_msg_xor(data);
 
@@ -276,7 +277,7 @@ void unit_filled(data_packet *data , unit *packet, int length)
     sent_msg_xor(data);
 
     data->segment.filed.fn[1] = fn + fc++;
-//    data->segment.filed.data = packet->cirAlarmValue; //临界报警值
+    //    data->segment.filed.data = packet->cirAlarmValue; //临界报警值
     quint8_to_char(data,packet->cirAlarmValue,length);
     sent_msg_xor(data);
 #if 1
@@ -288,7 +289,7 @@ void unit_filled(data_packet *data , unit *packet, int length)
         *(data->segment.filed.data) = packet->num; //回路数目
         //        qDebug()<< "success - 2 " << data->segment.filed.data << "success - 2" << *(data->segment.filed.data) << "success - 2" << packet->num;
         data->segment.filed.len = 1;
-//        quint8_to_char(data,packet,length);
+        //        quint8_to_char(data,packet,length);
         //        qDebug()<< "success - 3 " << data->segment.filed.len ;
         data->segment.len = 1 + 2 +2 + 1;
         sent_msg_xor(data);
@@ -369,6 +370,7 @@ void int_to_char(data_packet *data ,quint32 *buffer ,int length)
  */
 void sent_msg_xor(data_packet *data)
 {
+#if 0
     //    qDebug()<<"sent_msg_xor" <<data->segment.filed.data[0] << data->segment.filed.data[1];
     data->segment.XOR = 0;
     data->segment.XOR += data->segment.filed.addr;
@@ -381,7 +383,35 @@ void sent_msg_xor(data_packet *data)
         //        qDebug()<<"*"<<*(data->segment.filed.data+i);
     }
     sent_msg_end(data);
+#endif
 
+    devSetings *setings = get_devsetings();
+    for(int i = 0 ; i < (setings->viceNumber + 1); i++)
+    {
+        set_vice_number(data,i);
+    }
+
+}
+
+/**
+ * @brief 确定副机个数
+ * @param data
+ */
+void set_vice_number(data_packet *data ,int id)
+{
+    data->segment.filed.addr = id; //确定副机编号
+
+    data->segment.XOR = 0;
+    data->segment.XOR += data->segment.filed.addr;
+    data->segment.XOR += data->segment.filed.fn[0];
+    data->segment.XOR += data->segment.filed.fn[1];
+    data->segment.XOR += data->segment.filed.len;
+    for(int i = 0 ; i < data->segment.filed.len ; i++)
+    {
+        data->segment.XOR += *(data->segment.filed.data+i);
+        //        qDebug()<<"*"<<*(data->segment.filed.data+i);
+    }
+    sent_msg_end(data);
 }
 
 /**

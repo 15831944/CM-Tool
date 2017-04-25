@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QTimer *timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(timeoutdone()));
-    timer->start(5*1000); //时间必须比心跳包线程慢，心跳包线程会清零心跳包
+    timer->start(4*1000); //时间必须比心跳包线程慢，心跳包线程会清零心跳包
 
 }
 
@@ -70,6 +70,7 @@ void MainWindow::initThread()
 {
     MyUdpThread *udpthread = new MyUdpThread;
     TcpThread *tcpthread = new TcpThread;
+    GlobalReceiveThread *receivethread = new GlobalReceiveThread;
 
 }
 
@@ -123,6 +124,7 @@ void MainWindow::initPhaseWidget()
     phasewidget_1->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch); //水平自动调整宽度
     //      phasewidget_1->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     phasewidget_1->horizontalHeader()->setStretchLastSection(true);
+    phasewidget_1->setEditTriggers(QAbstractItemView::NoEditTriggers); //设置不可编辑
 
 
     QHBoxLayout *layout1 = new QHBoxLayout(upwidget);
@@ -395,7 +397,7 @@ void MainWindow::setPhaseVol(int row ,int count)
     QTableWidgetItem *item = phasewidget_1->item(row,count);
     int value;
     QString str;
-    value = *(souceData->inputPhrase.vol.currentValue + row);
+    value = *(souceData->inputPhrase.vol.currentValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 
@@ -406,7 +408,7 @@ void MainWindow::setPhaseCur(int row ,int count)
     QTableWidgetItem *item = phasewidget_1->item(row,count);
     int value;
     QString str;
-    value = *(souceData->inputPhrase.cur.currentValue + row);
+    value = *(souceData->inputPhrase.cur.currentValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -462,7 +464,7 @@ void MainWindow::setPhaseVolMax(int row ,int count)
     QTableWidgetItem *item = lefttablewidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->inputPhrase.vol.maxValue + row);
+    value = *(souceData->inputPhrase.vol.maxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -472,7 +474,7 @@ void MainWindow::setPhaseVolMin(int row ,int count)
     QTableWidgetItem *item = lefttablewidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->inputPhrase.vol.minValue + row);
+    value = *(souceData->inputPhrase.vol.minValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -499,7 +501,7 @@ void MainWindow::setPhaseCurMin(int row, int count)
     QTableWidgetItem *item = righttablewidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->inputPhrase.cur.minValue + row);
+    value = *(souceData->inputPhrase.cur.minValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -509,7 +511,7 @@ void MainWindow::setPhaseCurCirMin(int row, int count)
     QTableWidgetItem *item = righttablewidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->inputPhrase.cur.cirMinValue + row);
+    value = *(souceData->inputPhrase.cur.cirMinValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -519,7 +521,7 @@ void MainWindow::setPhaseCurCirMax(int row, int count)
     QTableWidgetItem *item = righttablewidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->inputPhrase.cur.cirMaxValue + row);
+    value = *(souceData->inputPhrase.cur.cirMaxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -529,7 +531,7 @@ void MainWindow::setPhaseCurMax(int row, int count)
     QTableWidgetItem *item = righttablewidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->inputPhrase.cur.maxValue + row);
+    value = *(souceData->inputPhrase.cur.maxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -582,7 +584,7 @@ void MainWindow::setLoopCur(int row ,int count)
     QTableWidgetItem *item = loopwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->loopData.cur.currentValue + row);
+    value = *(souceData->loopData.cur.currentValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -622,7 +624,7 @@ void MainWindow::setLoopMin(int row ,int count)
     QTableWidgetItem *item = loopwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->loopData.cur.minValue + row);
+    value = *(souceData->loopData.cur.minValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -632,7 +634,7 @@ void MainWindow::setLoopCirMin(int row ,int count)
     QTableWidgetItem *item = loopwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->loopData.cur.cirMinValue + row);
+    value = *(souceData->loopData.cur.cirMinValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -642,7 +644,7 @@ void MainWindow::setLoopCirMax(int row ,int count)
     QTableWidgetItem *item = loopwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->loopData.cur.cirMaxValue + row);
+    value = *(souceData->loopData.cur.cirMaxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -652,7 +654,7 @@ void MainWindow::setLoopMax(int row ,int count)
     QTableWidgetItem *item = loopwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->loopData.cur.maxValue + row);
+    value = *(souceData->loopData.cur.maxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -703,7 +705,7 @@ void MainWindow::setOutCur(int row ,int count)
     QTableWidgetItem *item = outwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->outData.cur.currentValue + row);
+    value = *(souceData->outData.cur.currentValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -743,7 +745,7 @@ void MainWindow::setOutMin(int row ,int count)
     QTableWidgetItem *item = outwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->outData.cur.minValue + row);
+    value = *(souceData->outData.cur.minValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -753,7 +755,7 @@ void MainWindow::setOutCirMin(int row ,int count)
     QTableWidgetItem *item = outwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->outData.cur.cirMinValue + row);
+    value = *(souceData->outData.cur.cirMinValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -763,7 +765,7 @@ void MainWindow::setOutCirMax(int row ,int count)
     QTableWidgetItem *item = outwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->outData.cur.cirMaxValue + row);
+    value = *(souceData->outData.cur.cirMaxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -773,7 +775,7 @@ void MainWindow::setOutMax(int row ,int count)
     QTableWidgetItem *item = outwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->outData.cur.maxValue + row);
+    value = *(souceData->outData.cur.maxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -822,7 +824,7 @@ void MainWindow::setTemMax(int row, int count)
     QTableWidgetItem *item = temwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->envData.tem.maxValue + row);
+    value = *(souceData->envData.tem.maxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -832,7 +834,7 @@ void MainWindow::setTemMin(int row, int count)
     QTableWidgetItem *item = temwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->envData.tem.minValue + row);
+    value = *(souceData->envData.tem.minValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -872,7 +874,7 @@ void MainWindow::setHumMax(int row, int count)
     QTableWidgetItem *item = humwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->envData.hum.maxValue + row);
+    value = *(souceData->envData.hum.maxValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -882,7 +884,7 @@ void MainWindow::setHumMin(int row, int count)
     QTableWidgetItem *item = humwidget->item(row,count);
     int value;
     QString str;
-    value = *(souceData->envData.hum.minValue + row);
+    value = *(souceData->envData.hum.minValue + row)/10;
     str = QString::number(value,10);
     item->setText(str);
 }
@@ -923,6 +925,8 @@ void MainWindow::initdevSeetings()
     setings.devLoopNum = ui->lineEdit_4->text().toInt();
     setings.devOutNum = ui->lineEdit_5->text().toInt();
     setings.devSensorNum = ui->lineEdit_6->text().toInt();
+    setings.volDownNum = ui->spinBox_3->value()*10;
+    setings.volUpNum = ui->spinBox_4->value()*10;
     //    setings.entranceGuard1 =
 }
 

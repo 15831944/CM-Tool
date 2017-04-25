@@ -27,7 +27,7 @@ void MyUdpThread::run()
 //        qDebug()<<"心跳包正确！";
 //        qDebug()<<"IP:"<<heartbeat->getAddr().toString();
 
-//        souce->renewalSouceData();//刷新随机数据
+        souce->renewalSouceData();//刷新随机数据
         souceData_To_protcldata();
         heartbeat->clearData();
     }

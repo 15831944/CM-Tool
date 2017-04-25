@@ -18,6 +18,7 @@ public:
     QHostAddress getAddr();
     quint16 getPort();
     QString getData();
+    QByteArray getArray();
     bool clearData();
     void sendData(QByteArray &array);
 
@@ -31,6 +32,7 @@ protected:
     QHostAddress *mAddr;
     quint16 *mPort;
     QString data;
+    QByteArray array;
 
 protected:
     void initData();

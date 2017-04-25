@@ -1,12 +1,16 @@
 ﻿#ifndef DATASOUCE_H
 #define DATASOUCE_H
 
-#define Random(x) (rand() % x) //获取0到x之间的随机数
+
 
 #include "datadefine.h"
-//#include "mainwindow.h"
+#include <QtGlobal>
+#include <QTime>
+#include <QCoreApplication>
 #include <QDebug>
 
+#define Random(x) (rand() % x) //获取0到x之间的随机数
+//#define Random(x) (qsrand(QTime(0,0,0).secsTo(QTime::currentTime())) % x) //获取0到x之间的随机数
 typedef struct deviceSettings
 {
     uchar devType; //1 -ip  2 -rp  3 -mp
@@ -20,6 +24,8 @@ typedef struct deviceSettings
     quint8 entranceGuard2;
     quint8 smoke;
     quint8 water;
+    quint16 volUpNum;
+    quint16 volDownNum;
 
 
 }devSetings;
@@ -52,12 +58,16 @@ public:
 
     //提供修改原始数据的接口
     void setData(unit *mUnit, int num, quint8 *data);
+    void setSwitchData(electricData *data,int num,quint8 status);  //开关的单一设置
+    void setAllSwitchData(electricData *data, quint8 status); //开关的统一设置
     //    void setData(unit *mUnit, int num, quint16 *data);
 
     void renewalSouceData(); //更新数据
-    void renewalUnit(unit &mUnit);
+    void renewalUnit(unit *mUnit);
 
     void changeDevSettings();
+    quint16 getRandomNumber(quint16 upNum , quint16 downNum);
+    void sleep(unsigned int msec);
 
 private:
     parameterData *souceData;

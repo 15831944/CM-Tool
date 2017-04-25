@@ -209,3 +209,8 @@ void SettingDialog::initData(unit *data)
     ui->spinBox_2->setValue(*(data->cirMinValue + row));
     ui->spinBox_4->setValue(*(data->cirMaxValue + row));
 }
+
+void SettingDialog::on_pushButton_2_clicked()
+{
+    this->close();
+}

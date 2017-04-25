@@ -46,12 +46,14 @@ void HeartBeat::dataReceived()
     initData();
     while(mUdpScoket->hasPendingDatagrams())
     {
-        QByteArray array;
+
         array.resize(mUdpScoket->pendingDatagramSize());
+        //        qDebug() <<array.size();
 
         quint64 number  = mUdpScoket->readDatagram(array.data(),array.size(),mAddr,mPort); //maddr和port存储接收到的心跳包心跳包IP
 
         data = array.data();
+        //        data = QString(array.data(),)
     }
 }
 
@@ -83,7 +85,17 @@ void HeartBeat::initData()
 
 QString HeartBeat::getData()
 {
-    return data;
+    QString str = data;
+    data.clear();
+    return str;
+}
+
+QByteArray HeartBeat::getArray()
+{
+    QByteArray str;
+    str = array;
+    array.clear();
+    return str;
 }
 
 bool HeartBeat::clearData()
