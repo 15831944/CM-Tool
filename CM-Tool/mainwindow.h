@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include<QTimer>
+#include <QTimer>
+#include <QPalette>
 #include <QGridLayout>
 #include <QBoxLayout>
 #include <QHBoxLayout>
@@ -47,6 +48,8 @@ private slots:
     void radioButtonEntaanceTwoClicked(int id);
     void radioButtonSmokeClicked(int id);
     void radioButtonWaterClicked(int id);
+
+    void initData(QString str);
 private:
     Ui::MainWindow *ui;
     QTableWidget *phasewidget_1; //输入相
@@ -61,11 +64,12 @@ private:
 
     DataSouce *souce;
     parameterData *souceData;
+    HeartBeat *heartbeat;
 
 
 private :
     void initThread();
-    void initData();
+//    void initData();
 
     void initWidget();
     void initPhaseWidget();

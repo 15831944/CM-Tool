@@ -42,3 +42,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     thresholdsetting/settingdialog.ui
+
+RESOURCES += \
+    image/image.qrc

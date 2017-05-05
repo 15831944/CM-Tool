@@ -23,6 +23,7 @@ public:
     void sendData(QByteArray &array);
 
 signals:
+    void receiveMessage(QString str);
 
 public slots:
     void dataReceived();

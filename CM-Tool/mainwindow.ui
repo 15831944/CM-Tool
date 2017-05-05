@@ -496,6 +496,9 @@
        <height>25</height>
       </rect>
      </property>
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
      <property name="sizeAdjustPolicy">
       <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
      </property>

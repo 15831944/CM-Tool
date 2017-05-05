@@ -10,7 +10,7 @@ MyUdpThread::MyUdpThread()
 
     QTimer *timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(timeoutdone()));
-    timer->start(3*1000); //每5s唤醒一次线程
+    timer->start(2*1000); //每5s唤醒一次线程
 }
 
 MyUdpThread::~MyUdpThread()
